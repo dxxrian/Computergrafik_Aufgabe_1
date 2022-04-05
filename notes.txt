@@ -1,0 +1,11 @@
+Juliamenge
+ChildView
+double valuesize = 1,6;
+int xp, xpmin = 0, xpdelta = size;
+int yp, ypmin = 0, ypdelta = size;
+double xd, xdmin = -valuesize, xddelta = 2*valuesize;
+double yd, ydmin = -valuesize, yddelta = 2*valuesize;
+
+for (xp=0; xp<size; xp++){
+	for
+}
