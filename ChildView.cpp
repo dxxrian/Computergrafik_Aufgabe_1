@@ -6,6 +6,9 @@
 #include "framework.h"
 #include "Computergrafik_Aufgabe_1.h"
 #include "ChildView.h"
+#include "Vector2.h"
+#include <chrono>
+#include <thread>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -30,6 +33,8 @@ BEGIN_MESSAGE_MAP(CChildView, CWnd)
 	ON_WM_RBUTTONUP()
 	ON_WM_LBUTTONUP()
 	ON_COMMAND(ID_AUFGABE1_MANDELBROT, &CChildView::OnAufgabe1Mandelbrot)
+	ON_COMMAND(ID_AUFGABE3_QUADRAT, &CChildView::OnAufgabe3Quadrat)
+	ON_COMMAND(ID_AUFGABE3_ROTIEREN, &CChildView::OnAufgabe3Rotieren)
 END_MESSAGE_MAP()
 
 
@@ -232,4 +237,94 @@ void CChildView::OnLButtonUp(UINT nFlags, CPoint point)
 	}
 
 	CWnd::OnLButtonUp(nFlags, point);
+}
+
+
+void CChildView::OnAufgabe3Quadrat()
+{
+	Vector2 Quadrat[4];
+	Quadrat[0] = Vector2(50, 50);
+	Quadrat[1] = Vector2(150, 50);
+	Quadrat[2] = Vector2(150, 150);
+	Quadrat[3] = Vector2(50, 150);
+
+	CDC* pDC = GetDC();
+
+	pDC->MoveTo(Quadrat[3].vek[0], Quadrat[3].vek[1]);
+	for (int ii = 0; ii < 4; ii++) {
+		pDC->LineTo(Quadrat[ii].vek[0], Quadrat[ii].vek[1]);
+	}
+
+	Matrix2 TransMat;
+	TransMat.setTrans(-100, -100);
+	for (int ii = 0; ii < 4; ii++) {
+		Quadrat[ii] = TransMat * Quadrat[ii];
+	}
+
+	Matrix2 RotMat;
+	RotMat.setRot(10);
+
+	for (int ii = 0; ii < 4; ii++) {
+		Quadrat[ii] = RotMat * Quadrat[ii];
+	}
+
+	Matrix2 TransMatR;
+	TransMatR.setTrans(100, 100);
+
+	for (int ii = 0; ii < 4; ii++) {
+		Quadrat[ii] = TransMatR * Quadrat[ii];
+	}
+	pDC->MoveTo(Quadrat[3].vek[0], Quadrat[3].vek[1]);
+	for (int ii = 0; ii < 4; ii++) {
+		pDC->LineTo(Quadrat[ii].vek[0], Quadrat[ii].vek[1]);
+	}
+}
+
+
+void CChildView::OnAufgabe3Rotieren()
+{
+	CRect rc;
+	GetClientRect(&rc);
+
+	int winx = rc.Width() / 2;
+	int winy = rc.Height() / 2;
+
+	int size = 200;
+
+	Vector2 Quadrat[4];
+	Quadrat[0] = Vector2(winx - size, winy - size);
+	Quadrat[1] = Vector2(winx + size, winy - size);
+	Quadrat[2] = Vector2(winx + size, winy + size);
+	Quadrat[3] = Vector2(winx - size, winy + size);
+	Matrix2 Mat;
+
+	CDC* pDC = GetDC();
+
+	for (int i = 0; i < 500; i++) {
+		pDC->FillSolidRect(0, 0, winx * 2, winy * 2, RGB(255, 255, 255));
+		Matrix2 TransMat;
+		TransMat.setTrans(-winx, -winy);
+		for (int ii = 0; ii < 4; ii++) {
+			Quadrat[ii] = TransMat * Quadrat[ii];
+		}
+
+		Matrix2 RotMat;
+		RotMat.setRot(0.01);
+
+		for (int ii = 0; ii < 4; ii++) {
+			Quadrat[ii] = RotMat * Quadrat[ii];
+		}
+
+		Matrix2 TransMatR;
+		TransMatR.setTrans(winx, winy);
+
+		for (int ii = 0; ii < 4; ii++) {
+			Quadrat[ii] = TransMatR * Quadrat[ii];
+		}
+		pDC->MoveTo(Quadrat[3].vek[0], Quadrat[3].vek[1]);
+		for (int ii = 0; ii < 4; ii++) {
+			pDC->LineTo(Quadrat[ii].vek[0], Quadrat[ii].vek[1]);
+		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+	}
 }
