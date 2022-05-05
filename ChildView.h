@@ -4,6 +4,8 @@
 
 
 #pragma once
+#include <gl/GL.h>
+#include <gl/GLU.h>
 
 
 // CChildView-Fenster
@@ -19,6 +21,9 @@ public:
 	double yddelta;
 	void JuliaMalen();
 	void MandelbrotMalen();
+	void GLInit(int Breite, int Hoehe, int Modus);
+	void Achsenkreuz(float l);
+	void Bunter_Einheitswuerfel();
 
 // Attribute
 public:
@@ -46,5 +51,7 @@ public:
 	afx_msg void OnAufgabe1Mandelbrot();
 	afx_msg void OnAufgabe3Quadrat();
 	afx_msg void OnAufgabe3Rotieren();
+	afx_msg void OnAufgabe3Wuerfel();
+	afx_msg void OnAufgabe5Opengl();
 };
 
